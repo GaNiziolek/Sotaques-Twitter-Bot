@@ -2,16 +2,18 @@ import tweepy
 import datetime
 from time import sleep
 import logging
+from os import environ
 
 def create_api():
-    API_key     = 'ZCvwUxlgRmfst9AlNYuxHo6Ej'
-    API_key_s   = 'ZFCSAYK6iavj6uYrVFiy9DVnzJ88ZUh4K5UrKCkbxsy0HwRWyy'
-    acess_tkn   = '1295488730548051969-GcNl7WsBw1wpIc8zXNLermjpQq291u'
-    acess_tkn_s = 'ehhLXURUNyWQa20Fid2GmUixzLvOSmFBVnYYOo1mI1jhD'
 
-    auth = tweepy.OAuthHandler(API_key, API_key_s)
+    API_KEY = environ['API_KEY']
+    API_SECRET = environ['API_SECRET']
+    ACCESS_KEY = environ['ACCESS_KEY']
+    ACCESS_SECRET = environ['ACCESS_SECRET']
+    
+    auth = tweepy.OAuthHandler(API_KEY, API_SECRET)
 
-    auth.set_access_token(acess_tkn, acess_tkn_s)
+    auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 
     api = tweepy.API(auth)
 
