@@ -77,9 +77,7 @@ def check_mentions(api, since_id):
             sql = "insert into TRADUTOR(BASE_WORD, TRANS_WORD) values ('{}', '{}')".format(words[0].strip(), words[1].strip())
             print('inserindo na tabela...')
             cur.execute(sql)
-
-
-        cur.fetchall()
+            
         cur.close()
         conn.close()
 
