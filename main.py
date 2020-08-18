@@ -54,9 +54,12 @@ def check_mentions(api, since_id):
         if not tweet.user.following:
             tweet.user.follow()
 
-        tweetar(api, 
-                f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
-                reply_to=tweet.id)
+        #tweetar(api, 
+        #        f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
+        #        reply_to=tweet.id)
+        
+        print(tweet.text)
+
 
     return new_since_id
 
