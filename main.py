@@ -63,8 +63,13 @@ def check_mentions(api, since_id):
         #tweetar(api, 
         #        f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
         #        reply_to=tweet.id)
+        text = tweet.text
         if 'significa' in tweet.text:
-            words = tweet.text.split('siginifica')
+
+            if '@tradubot' in text:
+                text.replace('@tradubot','')
+
+            words = tweet.text.split('significa')
             print(words[0] + ' para ' + words[1])
             sql = 'insert into Tradutor(Base_word, Trans_word) values ({}, {})'.format(words[0], words[1])
 
