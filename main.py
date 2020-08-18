@@ -67,15 +67,16 @@ def check_mentions(api, since_id):
 
 
         text = tweet.text
-        if 'significa' in tweet.text:
+        if 'significa' in text:
 
             if '@tradubot' in text:
                 text = text.replace('@tradubot','')
 
-            words = tweet.text.split('significa')
+            words = text.split('significa')
             print(words[0] + ' para ' + words[1])
             sql = 'insert into Tradutor(Base_word, Trans_word) values ("{}", "{}")'.format(words[0], words[1])
-
+            print('inserindo na tabela...')
+            cur.execute(sql)
 
     return new_since_id
 
