@@ -6,9 +6,9 @@ from os import environ
 
 def create_api():
 
-    API_KEY = environ['API_KEY']
-    API_SECRET = environ['API_SECRET']
-    ACCESS_KEY = environ['ACCESS_KEY']
+    API_KEY       = environ['API_KEY']
+    API_SECRET    = environ['API_SECRET']
+    ACCESS_KEY    = environ['ACCESS_KEY']
     ACCESS_SECRET = environ['ACCESS_SECRET']
     
     auth = tweepy.OAuthHandler(API_KEY, API_SECRET)
@@ -55,20 +55,12 @@ def main():
     api = create_api()
 
     while True:
-        arq = open('since_id.txt', 'r')
 
-        for line in arq:
-            since_id = int(line)
-
-        arq.close()
+        since_id = environ['SINCE_ID']
 
         since_id = check_mentions(api, since_id)
-        
-        arq = open('since_id.txt', 'w')
 
-        arq.write(str(since_id))
-
-        arq.close()
+        environ['SINCE_ID'] = since_id
 
         logging.info('Waiting...')
         sleep(60)
