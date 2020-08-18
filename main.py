@@ -29,7 +29,7 @@ def create_api():
 def tweetar(api, msg, reply_to=None):
     try:
         if reply_to != None:
-            api.update_status(status=f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
+            api.update_status(status=msg,
                                 in_reply_to_status_id=reply_to,
                                 auto_populate_reply_metadata=True)
         elif reply_to == None:
