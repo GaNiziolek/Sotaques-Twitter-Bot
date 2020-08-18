@@ -111,7 +111,7 @@ def main():
     print(ret)
     conn.commit()
     cur.close()
-    conn.close(        
+    conn.close()
         
 if __name__ == '__main__':
     main()
