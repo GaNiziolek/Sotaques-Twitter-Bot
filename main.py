@@ -26,7 +26,7 @@ def create_api():
 
     return api
 
-def tweetar(msg, reply_to=None):
+def tweetar(api, msg, reply_to=None):
     try:
         if reply_to != None:
             api.update_status(status=f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
@@ -54,7 +54,8 @@ def check_mentions(api, since_id):
         if not tweet.user.following:
             tweet.user.follow()
 
-        tweetar(f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
+        tweetar(api, 
+                f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
                 reply_to=tweet.id)
 
     return new_since_id
@@ -62,7 +63,7 @@ def check_mentions(api, since_id):
 def main():        
     api = create_api()
 
-    tweetar('Iniciando...')
+    tweetar(api, 'Iniciando...')
 
     while True:
 
