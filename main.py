@@ -78,8 +78,10 @@ def check_mentions(api, since_id):
             print('inserindo na tabela...')
             cur.execute(sql)
 
+
         cur.fetchall()
-        conn.commit()
+        cur.close()
+        conn.close()
 
     return new_since_id
 
