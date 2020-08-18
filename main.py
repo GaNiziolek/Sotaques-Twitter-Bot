@@ -54,9 +54,11 @@ def check_mentions(api, since_id):
 def main():        
     api = create_api()
 
+    api.update_status('Iniciando...')
+
     while True:
 
-        since_id = environ['SINCE_ID']
+        since_id = int(environ['SINCE_ID'])
 
         since_id = check_mentions(api, since_id)
 
