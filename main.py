@@ -49,6 +49,7 @@ def tweetar(api, msg, reply_to=None):
 def check_mentions(api, cur, since_id):
     print('Retrieving mentions')
     new_since_id = since_id
+
     for tweet in tweepy.Cursor(api.mentions_timeline, since_id=since_id).items():
         new_since_id = max(tweet.id, new_since_id)
         if tweet.in_reply_to_status_id is not None:
@@ -62,7 +63,6 @@ def check_mentions(api, cur, since_id):
         #tweetar(api, 
         #        f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
         #        reply_to=tweet.id)
-        
   
         text = tweet.text
         if 'significa' in text:
@@ -118,13 +118,14 @@ def main():
 
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         cur = conn.cursor()
+        cur.execute('SELECT last_id FROM last_id')
 
-        since_id = int(environ['SINCE_ID'])
+        since_id = int(cur.fetchone())
 
         since_id = check_mentions(api, cur, since_id)
         
-        environ['SINCE_ID'] = str(since_id)
-        
+        cur.execute("UPDATE last_id SET last_id=%s WHERE id=1", since_id)
+
         conn.commit()
         cur.close()
         conn.close()
