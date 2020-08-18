@@ -131,7 +131,6 @@ def main():
         
         print('Waiting...')
         sleep(60)
-        break
     
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cur = conn.cursor()
