@@ -8,7 +8,7 @@ import psycopg2
 DATABASE_URL = environ['DATABASE_URL']
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-cur = con.cursor()
+cur = conn.cursor()
 
 def create_api():
 
@@ -65,6 +65,7 @@ def check_mentions(api, since_id):
         #        reply_to=tweet.id)
         if 'significa' in tweet.text:
             words = tweet.text.split('siginifica')
+            print(words[0] + ' para ' + words[1])
             sql = 'insert into Tradutor(Base_word, Trans_word) values ({}, {})'.format(words[0], words[1])
 
 
