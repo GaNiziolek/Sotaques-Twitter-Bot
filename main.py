@@ -104,10 +104,11 @@ def main():
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cur = conn.cursor()
     
-    ret = cur.execute("SELECT * FROM TRADUTOR;")
-    print(ret)
+    cur.execute("SELECT * FROM TRADUTOR;")
     ret = cur.fetchall()
-    print(ret)
+    for row in ret:
+        print(row)
+        
     conn.commit()
     cur.close()
     conn.close()
