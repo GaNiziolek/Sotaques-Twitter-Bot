@@ -26,6 +26,21 @@ def create_api():
 
     return api
 
+def tweetar(msg, reply_to=None):
+    try:
+        if reply_to != None:
+            api.update_status(status=f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
+                                in_reply_to_status_id=reply_to,
+                                auto_populate_reply_metadata=True)
+        elif reply_to == None:
+            api.update_status(status=msg)
+
+    except tweepy.TweepError as e:
+        if e.api_code == 187:
+            print('Duplicated message')
+        else:
+            raise error
+
 def check_mentions(api, since_id):
     logging.info('Retrieving mentions')
     new_since_id = since_id
@@ -38,23 +53,16 @@ def check_mentions(api, since_id):
 
         if not tweet.user.following:
             tweet.user.follow()
-        try:
-            api.update_status(status=f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
-                              in_reply_to_status_id=tweet.id,
-                              auto_populate_reply_metadata=True)
 
-        except tweepy.TweepError as e:
-            if e.api_code == 187:
-                print('Duplicated message')
-            else:
-                raise error
+        tweetar(f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
+                reply_to=tweet.id)
 
     return new_since_id
 
 def main():        
     api = create_api()
 
-    api.update_status('Iniciando...')
+    tweetar('Iniciando...')
 
     while True:
 
