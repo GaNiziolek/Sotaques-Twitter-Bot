@@ -62,7 +62,7 @@ def main():
 
         since_id = check_mentions(api, since_id)
 
-        environ['SINCE_ID'] = since_id
+        environ['SINCE_ID'] = str(since_id)
 
         logging.info('Waiting...')
         sleep(60)
