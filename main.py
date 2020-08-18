@@ -121,10 +121,10 @@ def main():
         cur.execute('SELECT last_id FROM last_id')
 
         since_id = int(cur.fetchone()[0])
-
+        print('O ID atual é: ' + str(since_id))
         since_id = check_mentions(api, cur, since_id)
         
-        cur.execute("UPDATE last_id SET last_id=%s WHERE id=1", since_id)
+        cur.execute("UPDATE last_id SET last_id=%s WHERE id=1", [since_id])
 
         conn.commit()
         cur.close()
