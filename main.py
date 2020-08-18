@@ -7,8 +7,7 @@ import traceback
 
 DATABASE_URL = environ['DATABASE_URL']
 
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-cur = conn.cursor()
+
 
 def create_api():
 
@@ -77,9 +76,6 @@ def check_mentions(api, since_id):
             sql = "insert into TRADUTOR(BASE_WORD, TRANS_WORD) values ('{}', '{}')".format(words[0].strip(), words[1].strip())
             print('inserindo na tabela...')
             cur.execute(sql)
-            
-        cur.close()
-        conn.close()
 
     return new_since_id
 
@@ -90,12 +86,17 @@ def main():
 
     while True:
 
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cur = conn.cursor()
+        
         since_id = int(environ['SINCE_ID'])
 
         since_id = check_mentions(api, since_id)
-
+        
         environ['SINCE_ID'] = str(since_id)
 
+        cur.close()
+        conn.close()
         print('Waiting...')
         sleep(60)
 
