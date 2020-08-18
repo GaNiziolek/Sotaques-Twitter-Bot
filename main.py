@@ -1,19 +1,17 @@
 import tweepy
 import datetime
-import configparser
 from time import sleep
 import logging
 
-keys = configparser.ConfigParser()
-keys.read('keys.ini')
-
 def create_api():
+    API_key     = 'ZCvwUxlgRmfst9AlNYuxHo6Ej'
+    API_key_s   = 'ZFCSAYK6iavj6uYrVFiy9DVnzJ88ZUh4K5UrKCkbxsy0HwRWyy'
+    acess_tkn   = '1295488730548051969-GcNl7WsBw1wpIc8zXNLermjpQq291u'
+    acess_tkn_s = 'ehhLXURUNyWQa20Fid2GmUixzLvOSmFBVnYYOo1mI1jhD'
 
-    auth = tweepy.OAuthHandler(keys.get('keys', 'API_key'),
-                            keys.get('keys', 'API_key_s'))
+    auth = tweepy.OAuthHandler(API_key, API_key_s)
 
-    auth.set_access_token(keys.get('keys', 'acess_tkn'),
-                        keys.get('keys', 'acess_tkn_s'))
+    auth.set_access_token(acess_tkn, acess_tkn_s)
 
     api = tweepy.API(auth)
 
