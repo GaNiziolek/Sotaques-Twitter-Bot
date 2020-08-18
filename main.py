@@ -47,7 +47,7 @@ def tweetar(api, msg, reply_to=None):
         else:
             raise error
 
-def check_mentions(api, cur, since_id):
+def check_mentions(api, cur, conn, since_id):
     print('Retrieving mentions')
     new_since_id = since_id
     for tweet in tweepy.Cursor(api.mentions_timeline, since_id=since_id).items():
@@ -64,7 +64,6 @@ def check_mentions(api, cur, since_id):
         #        f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
         #        reply_to=tweet.id)
 
-
         text = tweet.text
         if 'significa' in text:
 
@@ -73,10 +72,11 @@ def check_mentions(api, cur, since_id):
 
             words = text.split('significa')
             print(words[0].strip() + ' para ' + words[1].strip())
-            sql = "insert into TRADUTOR(BASE_WORD, TRANS_WORD) values ('{}', '{}')".format(words[0].strip(), words[1].strip())
             print('inserindo na tabela...')
-            cur.execute(sql)
-
+            cur.execute("insert into TRADUTOR(BASE_WORD, TRANS_WORD) values (%s, %s)",
+                        (words[0].strip(), words[1].strip()))
+            conn.commit()
+            
     return new_since_id
 
 def main():        
@@ -91,14 +91,27 @@ def main():
 
         since_id = int(environ['SINCE_ID'])
 
-        since_id = check_mentions(api, cur, since_id)
+        since_id = check_mentions(api, cur, conn.commit(), since_id)
         
         environ['SINCE_ID'] = str(since_id)
-
+        
+        conn.commit()
         cur.close()
         conn.close()
+        
         print('Waiting...')
         sleep(60)
-
+    
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cur = conn.cursor()
+    
+    ret = cur.execute("SELECT * FROM TRADUTOR;")
+    print(ret)
+    ret = cur.fetchall()
+    print(ret)
+    conn.commit()
+    cur.close()
+    conn.close(        
+        
 if __name__ == '__main__':
     main()
