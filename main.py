@@ -65,6 +65,20 @@ def check_mentions(api, cur, since_id):
         #        reply_to=tweet.id)
   
         text = tweet.text
+
+        if 'o que significa' in text.lower():
+            base_word = text.replace('o que significa','')
+            base_word = base_word.repalce('?','')
+            base_word = base_word.repalce('!','')
+
+            cur.execute('SELECT trans_word FROM tradutor WHERE base_word = %s', base_word)
+
+            trans_word = cur.fetchone()[0]
+
+            tweetar(api,
+                    f'{base_word} significa {trans_word}',
+                    reply_to=tweet.id)
+
         if 'significa' in text:
 
             if '@tradubot' in text:
@@ -95,6 +109,7 @@ def check_mentions(api, cur, since_id):
                 tweetar(api,
                         f'Entendi! A palavra {base_word} siginifica {trans_word}!',
                         reply_to=tweet.id)
+        
         else:
             cur.execute('select BASE_WORD, TRANS_WORD from TRADUTOR')
             all_dict = cur.fetchall()
