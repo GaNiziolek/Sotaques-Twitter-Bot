@@ -8,7 +8,6 @@ import traceback
 DATABASE_URL = environ['DATABASE_URL']
 
 
-
 def create_api():
 
     API_KEY       = environ['API_KEY']
@@ -63,19 +62,51 @@ def check_mentions(api, cur, since_id):
         #tweetar(api, 
         #        f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
         #        reply_to=tweet.id)
-
+        
+  
         text = tweet.text
         if 'significa' in text:
 
             if '@tradubot' in text:
                 text = text.replace('@tradubot','')
-
-            words = text.split('significa')
-            print(words[0].strip() + ' para ' + words[1].strip())
-            print('inserindo na tabela...')
-            cur.execute("insert into TRADUTOR(BASE_WORD, TRANS_WORD) values (%s, %s)",
-                        (words[0].strip(), words[1].strip()))
+            if '@TraduBot' in text:
+                text = text.replace('@TraduBot','')
+        
+            words      = text.split('significa')
+            base_word  = words[0].strip()
+            trans_word = words[1].strip()
             
+            
+            print(words[0].strip() + ' para ' + words[1].strip())
+            
+
+            cur.execute('select * from TRADUTOR where BASE_WORD = %s', (base_word,))
+            exist = cur.fetchone()
+
+            if exist is not None:
+                tweetar(api,
+                        f'A palavra {base_word} já existe no meu dicionário',
+                        reply_to=tweet.id)
+            
+            else:
+                print('inserindo na tabela...')
+                cur.execute("insert into TRADUTOR(BASE_WORD, TRANS_WORD) values (%s, %s)",
+                            (base_word, trans_word))
+                tweetar(api,
+                        f'Entendi! A palavra {base_word} siginifica {trans_word}!',
+                        reply_to=tweet.id)
+        else:
+            cur.execute('select BASE_WORD, TRANS_WORD from TRADUTOR')
+            all_dict = cur.fetchall()
+            
+            for words in all_dict:
+                if words[0] in text:
+                    text = text.replace(words[0], words[1])
+            
+            tweetar(api,
+                    text,
+                    reply_to=tweet.id)
+             
     return new_since_id
 
 def main():        
