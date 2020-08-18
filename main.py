@@ -120,7 +120,7 @@ def main():
         cur = conn.cursor()
         cur.execute('SELECT last_id FROM last_id')
 
-        since_id = int(cur.fetchone())
+        since_id = int(cur.fetchone()[0])
 
         since_id = check_mentions(api, cur, since_id)
         
