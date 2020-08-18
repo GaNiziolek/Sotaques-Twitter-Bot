@@ -3,6 +3,12 @@ import datetime
 from time import sleep
 import logging
 from os import environ
+import psycopg2
+
+DATABASE_URL = environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+cur = con.cursor()
 
 def create_api():
 
@@ -57,8 +63,9 @@ def check_mentions(api, since_id):
         #tweetar(api, 
         #        f'Olá {tweet.user.name} ainda estou em testes, não sei responder muita coisa.',
         #        reply_to=tweet.id)
-        
-        print(tweet.text)
+        if 'significa' in tweet.text:
+            words = tweet.text.split('siginifica')
+            sql = 'insert into Tradutor(Base_word, Trans_word) values ({}, {})'.format(words[0], words[1])
 
 
     return new_since_id
