@@ -51,7 +51,7 @@ def get_mentions(api, cur, since_id):
     
     mentions = tweepy.Cursor(api.mentions_timeline, since_id=since_id).items()
 
-    if mentions > 0:
+    if len(mentions > 0):
         print(f'{len(mentions)} mentions')
         return mentions
     else:
