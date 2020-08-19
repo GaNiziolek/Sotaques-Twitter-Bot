@@ -11,7 +11,9 @@ from fuzzywuzzy import process
 class tradubot():
     def __init__(self):
         DATABASE_URL = environ['DATABASE_URL']
-        tweetar(api, 'Iniciando...')
+
+        self.tweetar(api, 'Iniciando...')
+
         self.api = self.create_api()
 
         self.conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -20,20 +22,20 @@ class tradubot():
     def main(self):        
         while True:
 
-            since_id = get_last_id()
+            since_id = self.get_last_id()
 
             print('O ID atual é: ' + str(since_id))
 
             last_since_id = since_id
 
-            mentions = get_mentions(since_id)
+            mentions =self.get_mentions(since_id)
 
             for mention in mentions:
                 last_since_id = max(mention.id, last_since_id)
 
-                set_last_id(last_since_id)
+                self.set_last_id(last_since_id)
 
-                action = analysis(mention)
+                action = self.analysis(mention)
         
             self.conn.commit()
             
@@ -107,7 +109,7 @@ class tradubot():
             exist = cur.fetchone()
 
             if exist is not None:
-                tweetar(api,
+                self.tweetar(api,
                         f'A palavra {base_word} já existe no meu dicionário',
                         reply_to=tweet.id)
             
@@ -115,7 +117,7 @@ class tradubot():
                 print('inserindo na tabela...')
                 cur.execute("insert into words(BASE_WORD, TRANS_WORD) values (%s, %s)",
                             (base_word, trans_word))
-                tweetar(api,
+                self.tweetar(api,
                         f'Entendi! A palavra {base_word} siginifica {trans_word}!',
                         reply_to=tweet.id)
 
@@ -129,7 +131,7 @@ class tradubot():
 
             trans_word = cur.fetchone()[0]
 
-            tweetar(api,
+            self.tweetar(api,
                     f'{base_word} significa {trans_word}',
                     reply_to=tweet.id)
 
@@ -142,14 +144,14 @@ class tradubot():
             if words[0] in text:
                 text = text.replace(words[0], words[1])
         
-        tweetar(api,
+        self.tweetar(api,
                 text,
                 reply_to=tweet.id)
 
     def analysis(self, tweet):
         text = tweet.text.lower()
 
-        languages = get_languages()
+        languages = self.get_languages()
 
         # Remove no texto as linguagens que já existem
         for language in languages:
@@ -160,11 +162,11 @@ class tradubot():
 
         print(f'Será avaliado o texto "{text}"')
 
-        best_match = process.extractOne(text, get_texts_to_match())
+        best_match = process.extractOne(text, self.get_texts_to_match())
 
         print(f'{best_match[0]} foi o melhor resultado com {best_match[1]}% de semelhança.')
 
-        action = select_action_by_match(best_match[0])
+        action = self.select_action_by_match(best_match[0])
 
         print(f'A ação selecionada é "{action}"')
 
