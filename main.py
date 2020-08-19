@@ -51,12 +51,7 @@ def get_mentions(api, cur, since_id):
     
     mentions = tweepy.Cursor(api.mentions_timeline, since_id=since_id).items()
 
-    if len(mentions) > 0:
-        print(f'{len(mentions)} mentions')
-        return mentions
-    else:
-        print('No mentions')
-        return None
+    return mentions
 
 def learn(language, base_word, trans_word):
     if 'significa' in text:
@@ -208,20 +203,19 @@ def main():
 
         mentions = get_mentions(api, cur, since_id)
 
-        if mentions is not None:
-            for mention in mentions:
-                last_since_id = max(mention.id, last_since_id)
+        for mention in mentions:
+            last_since_id = max(mention.id, last_since_id)
 
-                set_last_id(cur, last_since_id)
+            set_last_id(cur, last_since_id)
 
-                action = analysis(mention)
-        
+            action = analysis(mention)
+    
         conn.commit()
         cur.close()
         conn.close()
         
         print('Waiting...')
-        sleep(30)
+        sleep(60)
     
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cur = conn.cursor()
