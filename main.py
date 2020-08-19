@@ -12,12 +12,12 @@ class tradubot():
     def __init__(self):
         DATABASE_URL = environ['DATABASE_URL']
 
-        self.tweetar(api, 'Iniciando...')
-
         self.api = self.create_api()
 
         self.conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         self.cur = self.conn.cursor()
+
+        self.tweetar(api, 'Iniciando...')
 
     def main(self):        
         while True:
