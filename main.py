@@ -17,6 +17,32 @@ class tradubot():
         self.conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         self.cur = self.conn.cursor()
 
+    def main(self):        
+        while True:
+
+            since_id = get_last_id()
+
+            print('O ID atual é: ' + str(since_id))
+
+            last_since_id = since_id
+
+            mentions = get_mentions(since_id)
+
+            for mention in mentions:
+                last_since_id = max(mention.id, last_since_id)
+
+                set_last_id(last_since_id)
+
+                action = analysis(mention)
+        
+            self.conn.commit()
+            
+            print('Waiting...')
+            sleep(60)
+
+        cur.close()
+        conn.close()
+
     def create_api(self):
         API_KEY       = environ['API_KEY']
         API_SECRET    = environ['API_SECRET']
@@ -194,32 +220,8 @@ class tradubot():
 
         return self.cur.fetchall()
 
-    def main(self):        
-        
-        while True:
-
-            since_id = get_last_id()
-
-            print('O ID atual é: ' + str(since_id))
-
-            last_since_id = since_id
-
-            mentions = get_mentions(since_id)
-
-            for mention in mentions:
-                last_since_id = max(mention.id, last_since_id)
-
-                set_last_id(last_since_id)
-
-                action = analysis(mention)
-        
-            self.conn.commit()
-            
-            print('Waiting...')
-            sleep(60)
-
-        cur.close()
-        conn.close()
+    
         
 if __name__ == '__main__':
-    main()
+    bot = tradubot()
+    bot.main()
