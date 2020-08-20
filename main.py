@@ -66,6 +66,30 @@ class tradubot():
 
         cur.close()
         conn.close()
+    def analysis(self, tweet):
+        text = tweet.text.lower()
+
+        languages = self.get_languages()
+
+        # Remove no texto as linguagens que já existem
+        for language in languages:
+            print(language[0])
+            text = text.replace(language[0], '')
+
+        # Remove o @
+        text = text.replace('@tradubot', '')
+
+        print(f'Será avaliado o texto "{text}"')
+
+        best_match = process.extractOne(text, self.get_texts_to_match())
+
+        print(f'{best_match[0][0]} foi o melhor resultado com {best_match[1]}% de semelhança.')
+
+        action = self.select_action_by_match(best_match[0][0])[0][0]
+
+        print(f'A ação selecionada é "{action}"')
+
+        return action, text, best_match[0][0]
 
     def create_api(self):
         API_KEY       = environ['API_KEY']
@@ -169,31 +193,6 @@ class tradubot():
         self.tweetar(api,
                 text,
                 reply_to=tweet.id)
-
-    def analysis(self, tweet):
-        text = tweet.text.lower()
-
-        languages = self.get_languages()
-
-        # Remove no texto as linguagens que já existem
-        for language in languages:
-            print(language)
-            text = text.replace(language[0], '')
-
-        # Remove o @
-        text = text.replace('@tradubot', '')
-
-        print(f'Será avaliado o texto "{text}"')
-
-        best_match = process.extractOne(text, self.get_texts_to_match())
-
-        print(f'{best_match[0][0]} foi o melhor resultado com {best_match[1]}% de semelhança.')
-
-        action = self.select_action_by_match(best_match[0][0])[0]
-
-        print(f'A ação selecionada é "{action}"')
-
-        return action, text, best_match[0][0]
 
     def select_action_by_match(self, text):
         self.cur.execute(f"SELECT action FROM word_matching WHERE text = '{text}';")
