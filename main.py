@@ -4,7 +4,7 @@ from time import sleep
 from os import environ
 import psycopg2
 import traceback
-from fuzzywuzzy import process
+from fuzzywuzzy import token_set_ratio
 
 
 
@@ -93,9 +93,30 @@ class tradubot():
         # Remove o @
         text = text.replace('@tradubot', '')
 
+
         print(f'Será avaliado o texto "{text}"')
 
-        best_match = process.extractOne(text, self.get_texts_to_match())
+        best_score = 0
+        best_match = ''
+        
+        for text_to_match in self.get_texts_to_match():
+            text_to_match = text_to_match[0]
+
+            text_splited          = text.split(' ')
+            text_to_match_splited = text_to_match.split(' ')
+
+            for word in text_splited:
+                if word in text_to_match_splited:
+                    text_new = tex.replace(word, '')
+            
+            print(f'{text_to_match} versus {text_new}')
+
+            score = token_set_ratio(text_to_match, text_new)
+
+            if score > best_score:
+                best_match = text_to_match
+
+        #best_match = process.extractOne(text, self.get_texts_to_match())
 
         print(f'{best_match[0][0]} foi o melhor resultado com {best_match[1]}% de semelhança.')
 
