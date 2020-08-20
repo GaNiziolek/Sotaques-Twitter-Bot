@@ -31,12 +31,34 @@ class tradubot():
             mentions =self.get_mentions(since_id)
 
             for mention in mentions:
+                
                 last_since_id = max(mention.id, last_since_id)
 
                 self.set_last_id(last_since_id)
 
-                action = self.analysis(mention)
+                if mention.in_reply_to_status_id is not None:
+                    pass
         
+                print(f'Answering to {mention.user.name}')
+
+                if not mention.user.following:
+                    mention.user.follow()
+
+                action, text, best_match = self.analysis(mention)
+
+
+                if action == 'create':
+                    new_language = text.split()[-1]
+
+                    sucess = new_language(mention.user.name, new_language)
+                    
+                    if sucess:
+                        self.tweetar(f'{new_language.upper()} foi criado meu amigo')
+
+                    else:
+                        self.tweetar('Alguma coisa deu errado! Entre em contato por DM por favor.')
+                    
+
             self.conn.commit()
             
             print('Waiting...')
@@ -167,11 +189,11 @@ class tradubot():
 
         print(f'{best_match[0][0]} foi o melhor resultado com {best_match[1]}% de semelhança.')
 
-        action = self.select_action_by_match(best_match[0][0])
+        action = self.select_action_by_match(best_match[0][0])[0]
 
         print(f'A ação selecionada é "{action}"')
 
-        return action
+        return action, text, best_match[0][0]
 
     def select_action_by_match(self, text):
         self.cur.execute(f"SELECT action FROM word_matching WHERE text = '{text}';")
@@ -181,29 +203,15 @@ class tradubot():
         self.cur.execute("SELECT text FROM word_matching;")
         return self.cur.fetchall()
 
-    def new_language(self, cursor, user_name, language):
+    def new_language(self, user_name, language):
         print(f'{user_name} is creating new language: {language.lower()}')
 
         try:
-            cursor.execute(f'ALTER TABLE words ADD COLUMN {language.lower()} TEXT;')
+            self.cur.execute(f'ALTER TABLE words ADD COLUMN {language.lower()} TEXT;')
             return True
         except:
             print('Error while creating new language')
             return False
-
-    def a(self, tweet):
-
-        if tweet.in_reply_to_status_id is not None:
-            pass
-        
-        print(f'Answering to {tweet.user.name}')
-
-        if not tweet.user.following:
-            tweet.user.follow()
-        
-        
-                
-        return new_since_id
 
     def get_last_id(self):
         self.cur.execute("SELECT last_id FROM last_id")
