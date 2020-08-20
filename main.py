@@ -99,7 +99,7 @@ class tradubot():
         best_score_token = 0
         best_score_partial = 0
         best_match = ''
-        
+        find = False
         for text_to_match in self.get_texts_to_match():
             text_to_match = text_to_match[0]
 
@@ -120,15 +120,19 @@ class tradubot():
             text_new = text_new.strip()
 
             print(text_new)
-
+            
             for text_to_match_exactly in self.get_texts_to_match():
+
                 if text_to_match_exactly[0] == text_new:
-                    print(f'{text_new} is equal to {text_to_match_exactly[0]}')
+                    print(f'{text_new} é igual a {text_to_match_exactly[0]}')
 
                     best_match = text_to_match_exactly[0]
-                    break
+                    find = True
                     break
 
+            if find:
+                break     
+                  
             score_token = fuzz.token_set_ratio(text_new, text_to_match)
 
             score_partial = fuzz.partial_ratio(text_new, text_to_match)
