@@ -122,11 +122,10 @@ class tradubot():
             print(text_new)
 
             for text_to_match_exactly in self.get_texts_to_match():
-                print(text_to_match_exactly)
-                if text_to_match_exactly == text_new:
-                    print(f'{text_new} is equal to {text_to_match_exactly}')
+                if text_to_match_exactly[0] == text_new:
+                    print(f'{text_new} is equal to {text_to_match_exactly[0]}')
 
-                    best_match = text_to_match_exactly
+                    best_match = text_to_match_exactly[0]
                     break
                     break
 
