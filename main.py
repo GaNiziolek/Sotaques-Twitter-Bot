@@ -224,7 +224,7 @@ class tradubot():
         return self.cur.fetchall()
 
     def get_texts_to_match(self):
-        self.cur.execute("SELECT text FROM word_matching;")
+        self.cur.execute("SELECT text FROM word_matching ORDER BY CHAR_LEGTH(text);")
         return self.cur.fetchall()
 
     def new_language(self, user_name, language):
