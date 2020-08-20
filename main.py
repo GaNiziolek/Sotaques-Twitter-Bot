@@ -17,7 +17,7 @@ class tradubot():
         self.conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         self.cur = self.conn.cursor()
 
-        self.tweetar(api, 'Iniciando...')
+        self.tweetar('Iniciando...')
 
     def main(self):        
         while True:
