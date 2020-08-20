@@ -108,7 +108,7 @@ class tradubot():
             print(text_to_match_splited)
 
             for word in text_splited:
-                if word.strip() in text_to_match_splited:
+                if word.strip() not in text_to_match_splited:
                     text_new = text.replace(word, '')
             
             score = fuzz.token_set_ratio(text_to_match, text_new)
