@@ -4,7 +4,7 @@ from time import sleep
 from os import environ
 import psycopg2
 import traceback
-from fuzzywuzzy import token_set_ratio
+from fuzzywuzzy import fuzz
 
 
 
@@ -111,7 +111,7 @@ class tradubot():
             
             print(f'{text_to_match} versus {text_new}')
 
-            score = token_set_ratio(text_to_match, text_new)
+            score = fuzz.token_set_ratio(text_to_match, text_new)
 
             if score > best_score:
                 best_match = text_to_match
