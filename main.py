@@ -174,7 +174,7 @@ class tradubot():
         return action
 
     def select_action_by_match(self, text):
-        self.cur.execute(f'SELECT action FROM word_matching WHERE text = {text};')
+        self.cur.execute(f'SELECT action FROM word_matching WHERE text = "{text}";')
         return self.cur.fetchall()
 
     def get_texts_to_match(self):
