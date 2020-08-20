@@ -127,7 +127,7 @@ class tradubot():
 
         print(f'A ação selecionada é "{action}"')
 
-        return action, text, best_match[0][0], language
+        return action, text, best_match, language
 
     def create_api(self):
         API_KEY       = environ['API_KEY']
@@ -224,6 +224,7 @@ class tradubot():
         return self.cur.fetchall()
 
     def get_texts_to_match(self):
+        # É ordenado do maior para menor pra verificar primeiro as opções mais complexas
         self.cur.execute("SELECT text FROM word_matching ORDER BY LENGTH(text) DESC;")
         return self.cur.fetchall()
 
