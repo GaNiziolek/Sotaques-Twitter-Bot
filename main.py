@@ -119,10 +119,12 @@ class tradubot():
 
             text_new = text_new.strip()
 
+            print(text_new)
+            
             for text_to_match_exactly in self.get_texts_to_match():
                 if text_to_match_exactly == text_new:
                     print(f'{text_new} is equal to {text_to_match_exactly}')
-                    
+
                     best_match = text_to_match_exactly
                     break
                     break
