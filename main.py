@@ -174,11 +174,11 @@ class tradubot():
         return action
 
     def select_action_by_match(self, text):
-        self.cur.execute(f'SELECT action FROM word_matching WHERE text = "{text}";')
+        self.cur.execute(f"SELECT action FROM word_matching WHERE text = '{text}';")
         return self.cur.fetchall()
 
     def get_texts_to_match(self):
-        self.cur.execute('SELECT text FROM word_matching;')
+        self.cur.execute("SELECT text FROM word_matching;")
         return self.cur.fetchall()
 
     def new_language(self, cursor, user_name, language):
@@ -206,7 +206,7 @@ class tradubot():
         return new_since_id
 
     def get_last_id(self):
-        self.cur.execute('SELECT last_id FROM last_id')
+        self.cur.execute("SELECT last_id FROM last_id")
         return int(self.cur.fetchone()[0])
 
     def set_last_id(self, id):
