@@ -155,7 +155,8 @@ class tradubot():
 
         # Remove no texto as linguagens que já existem
         for language in languages:
-            text = text.replace(language, '')
+            print(language)
+            text = text.replace(language[0], '')
 
         # Remove o @
         text = text.replace('@tradubot', '')
