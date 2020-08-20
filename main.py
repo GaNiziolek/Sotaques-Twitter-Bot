@@ -48,12 +48,12 @@ class tradubot():
 
 
                 if action == 'create':
-                    new_language = text.split()[-1]
+                    new_language_name = text.split()[-1]
 
-                    sucess = new_language(mention.user.name, new_language)
+                    sucess = self.new_language(mention.user.name, new_language_name)
                     
                     if sucess:
-                        self.tweetar(f'{new_language.upper()} foi criado meu amigo')
+                        self.tweetar(f'{new_language_name.upper()} foi criado meu amigo')
 
                     else:
                         self.tweetar('Alguma coisa deu errado! Entre em contato por DM por favor.')
