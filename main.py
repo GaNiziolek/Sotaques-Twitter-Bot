@@ -113,7 +113,7 @@ class tradubot():
             
             score = fuzz.token_set_ratio(text_new, text_to_match)
 
-            #print(f'{score} - {text_to_match} versus {text_new}')
+            print(f'{score} - {text_to_match} versus {text_new}')
 
             if score > best_score:
                 best_match = text_to_match
