@@ -165,8 +165,6 @@ class tradubot():
 
         best_match = process.extractOne(text, self.get_texts_to_match())
 
-        print(self.get_texts_to_match())
-
         print(f'{best_match[0][0]} foi o melhor resultado com {best_match[1]}% de semelhança.')
 
         action = self.select_action_by_match(best_match[0][0])
@@ -176,7 +174,7 @@ class tradubot():
         return action
 
     def select_action_by_match(self, text):
-        self.cur.execute(f'SELECT action FROM word_matching WHERE text = "{text}"";')
+        self.cur.execute(f'SELECT action FROM word_matching WHERE text = {text};')
         return self.cur.fetchall()
 
     def get_texts_to_match(self):
