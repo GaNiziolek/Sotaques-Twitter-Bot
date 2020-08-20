@@ -42,7 +42,7 @@ class tradubot():
                 if not mention.user.following:
                     mention.user.follow()
 
-                action, text, best_match = self.analysis(mention)
+                action, text, best_match, language = self.analysis(mention)
 
                 if action == 'create':
                     if ':' in text:
@@ -64,7 +64,7 @@ class tradubot():
                         self.tweetar('Alguma coisa deu errado! Entre em contato por DM por favor.', reply_to=mention.id)
                 
                 elif action == 'learn':
-                    sucess = self.learn(text, best_match)
+                    sucess = self.learn(text, best_match, language)
 
 
                 self.set_last_id(last_since_id) 
@@ -85,8 +85,11 @@ class tradubot():
         # Remove no texto as linguagens que já existem
         for language in languages:
             print(language[0])
-            text = text.replace(language[0], 'LANGUAGE')
-
+            if language[0] in text:
+                text = text.replace(language[0], 'LANGUAGE')
+                language = language[0]
+                break
+        
         # Remove o @
         text = text.replace('@tradubot', '')
 
@@ -100,7 +103,7 @@ class tradubot():
 
         print(f'A ação selecionada é "{action}"')
 
-        return action, text, best_match[0][0]
+        return action, text, best_match[0][0], language
 
     def create_api(self):
         API_KEY       = environ['API_KEY']
@@ -146,18 +149,16 @@ class tradubot():
 
         return mentions
 
-    def learn(self, text, best_match):
+    def learn(self, text, best_match, language):
         separated_text = eval(self.select_separated_text_by_match(best_match)[0][0])
 
         text = text.split()
 
         for num, part in enumerate(separated_text):
             if part == 'BASE_WORD':
-                base_word = text[num]
+                base_word = text[num + 1]
             elif part == 'TRANS_WORD':
-                trans_word = text[num]
-            elif part == 'LANGUAGE':
-                language = text[num]
+                trans_word = text[num + 1]
 
         print(f'Base_word: {base_word}')
         print(f'Trans_word: {trans_word}')
