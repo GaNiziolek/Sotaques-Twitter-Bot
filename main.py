@@ -107,7 +107,7 @@ class tradubot():
 
             for word in text_splited:
                 if word in text_to_match_splited:
-                    text_new = tex.replace(word, '')
+                    text_new = text.replace(word, '')
             
             print(f'{text_to_match} versus {text_new}')
 
