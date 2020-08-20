@@ -96,7 +96,8 @@ class tradubot():
 
         print(f'Será avaliado o texto "{text}"')
 
-        best_score = 0
+        best_score_token = 0
+        best_score_partial = 0
         best_match = ''
         
         for text_to_match in self.get_texts_to_match():
@@ -122,9 +123,10 @@ class tradubot():
 
             print(f'{score_token}Token - {score_partial}Partial- {text_to_match} versus {text_new}')
 
-            if score_token > best_score:
-                best_match = text_to_match
-                best_score = score_token
+            if score_token > best_score_token and score_partial > best_score_partial:
+                best_match         = text_to_match
+                best_score_token   = score_token
+                best_score_partial = score_partial
 
         #best_match = process.extractOne(text, self.get_texts_to_match())
 
