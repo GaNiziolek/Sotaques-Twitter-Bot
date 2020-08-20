@@ -113,13 +113,18 @@ class tradubot():
                 if word not in text_to_match_splited:
                     text_new = text_new.replace(word, '')
             
-            score = fuzz.token_set_ratio(text_to_match, text_new)
+            for i in range(10):
+                text_new = text_new.replace('  ', ' ')
+            
+            score_token = fuzz.token_set_ratio(text_to_match, text_new)
 
-            print(f'{score} - {text_to_match} versus {text_new}')
+            score_partial = fuzz.partial_ratio(text_to_match, text_new)
 
-            if score > best_score:
+            print(f'{score_token}Token - {score_partial}Partial- {text_to_match} versus {text_new}')
+
+            if score_token > best_score:
                 best_match = text_to_match
-                best_score = score
+                best_score = score_token
 
         #best_match = process.extractOne(text, self.get_texts_to_match())
 
