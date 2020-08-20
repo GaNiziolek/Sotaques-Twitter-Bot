@@ -115,6 +115,7 @@ class tradubot():
 
             if score > best_score:
                 best_match = text_to_match
+                best_score = score
 
         #best_match = process.extractOne(text, self.get_texts_to_match())
 
