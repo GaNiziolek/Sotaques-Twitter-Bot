@@ -85,7 +85,7 @@ class tradubot():
         # Remove no texto as linguagens que já existem
         for language in languages:
             print(language[0])
-            text = text.replace(language[0], '')
+            text = text.replace(language[0], 'LANGUAGE')
 
         # Remove o @
         text = text.replace('@tradubot', '')
