@@ -150,7 +150,7 @@ class tradubot():
 
         #best_match = process.extractOne(text, self.get_texts_to_match())
 
-        print(f'{best_match} foi o melhor resultado com {best_score_token}% token e {best_score_partial}% partail de semelhança.')
+        print(f'{best_match} foi o melhor resultado com {best_score_token}% token e {best_score_partial}% partial de semelhança.')
 
         action = self.select_action_by_match(best_match)[0][0]
 
@@ -206,12 +206,13 @@ class tradubot():
         separated_text = eval(self.select_separated_text_by_match(best_match)[0][0])
 
         text = text.split()
-
+        print(text)
+        
         for num, part in enumerate(separated_text):
             if part == 'BASE_WORD':
-                base_word = text[num + 1]
+                base_word = text[num]
             elif part == 'TRANS_WORD':
-                trans_word = text[num + 1]
+                trans_word = text[num]
 
         print(f'Base_word: {base_word}')
         print(f'Trans_word: {trans_word}')
