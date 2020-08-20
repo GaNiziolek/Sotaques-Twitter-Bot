@@ -116,7 +116,17 @@ class tradubot():
             
             for i in range(10):
                 text_new = text_new.replace('  ', ' ')
-            
+
+            text_new = text_new.strip()
+
+            for text_to_match_exactly in self.get_texts_to_match():
+                if text_to_match_exactly == text_new:
+                    print(f'{text_new} is equal to {text_to_match_exactly}')
+                    
+                    best_match = text_to_match_exactly
+                    break
+                    break
+
             score_token = fuzz.token_set_ratio(text_new, text_to_match)
 
             score_partial = fuzz.partial_ratio(text_new, text_to_match)
