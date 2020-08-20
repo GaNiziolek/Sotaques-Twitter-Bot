@@ -116,9 +116,9 @@ class tradubot():
             for i in range(10):
                 text_new = text_new.replace('  ', ' ')
             
-            score_token = fuzz.token_set_ratio(text_to_match, text_new)
+            score_token = fuzz.token_set_ratio(text_new, text_to_match)
 
-            score_partial = fuzz.partial_ratio(text_to_match, text_new)
+            score_partial = fuzz.partial_ratio(text_new, text_to_match)
 
             print(f'{score_token}Token - {score_partial}Partial- {text_to_match} versus {text_new}')
 
