@@ -34,8 +34,6 @@ class tradubot():
                 
                 last_since_id = max(mention.id, last_since_id)
 
-                self.set_last_id(last_since_id)
-
                 if mention.in_reply_to_status_id is not None:
                     pass
         
@@ -46,18 +44,30 @@ class tradubot():
 
                 action, text, best_match = self.analysis(mention)
 
-
                 if action == 'create':
-                    new_language_name = text.split()[-1]
+                    if ':' in text:
+                        new_language_name = text.split(':')[-1]
+
+                    elif ',' in text:
+                        new_language_name = text.split(',')[-1]
+
+                    else:
+                        new_language_name = text.split()[-1]
+
 
                     sucess = self.new_language(mention.user.name, new_language_name)
                     
                     if sucess:
-                        self.tweetar(f'{new_language_name.upper()} foi criado meu amigo')
+                        self.tweetar(f'O idioma {new_language_name.upper()} foi criado por {mention.user.name}')
 
                     else:
-                        self.tweetar('Alguma coisa deu errado! Entre em contato por DM por favor.')
-                    
+                        self.tweetar('Alguma coisa deu errado! Entre em contato por DM por favor.', reply_to=mention.id)
+                
+                elif action == 'learn':
+                    sucess = self.learn(text, best_match)
+
+
+                self.set_last_id(last_since_id) 
 
             self.conn.commit()
             
@@ -66,6 +76,7 @@ class tradubot():
 
         cur.close()
         conn.close()
+
     def analysis(self, tweet):
         text = tweet.text.lower()
 
@@ -135,38 +146,23 @@ class tradubot():
 
         return mentions
 
-    def learn(self, language, base_word, trans_word):
-        if 'significa' in text:
+    def learn(self, text, best_match):
+        separated_text = eval(self.select_separated_text_by_match(best_match)[0][0])
 
-            if '@tradubot' in text:
-                text = text.replace('@tradubot','')
-            if '@TraduBot' in text:
-                text = text.replace('@TraduBot','')
+        text = text.split()
+
+        for num, part in enumerate(separated_text):
+            if part == 'BASE_WORD':
+                base_word = text[num]
+            elif part == 'TRANS_WORD':
+                trans_word = text[num]
+            elif part == 'LANGUAGE':
+                language = text[num]
+
+        print(f'Base_word: {base_word}')
+        print(f'Trans_word: {trans_word}')
+        print(f'Language: {language}')
         
-            words      = text.split('significa')
-            base_word  = words[0].strip()
-            trans_word = words[1].strip()
-            
-            
-            print(words[0].strip() + ' para ' + words[1].strip())
-            
-
-            cur.execute('select * from words where BASE_WORD = %s', (base_word,))
-            exist = cur.fetchone()
-
-            if exist is not None:
-                self.tweetar(api,
-                        f'A palavra {base_word} já existe no meu dicionário',
-                        reply_to=tweet.id)
-            
-            else:
-                print('inserindo na tabela...')
-                cur.execute("insert into words(BASE_WORD, TRANS_WORD) values (%s, %s)",
-                            (base_word, trans_word))
-                self.tweetar(api,
-                        f'Entendi! A palavra {base_word} siginifica {trans_word}!',
-                        reply_to=tweet.id)
-
     def meaning(self, language, word):
         if 'o que significa' in text.lower():
             base_word = text.replace('o que significa','')
@@ -193,6 +189,10 @@ class tradubot():
         self.tweetar(api,
                 text,
                 reply_to=tweet.id)
+    
+    def select_separated_text_by_match(self, match):
+        self.cur.execute(f"SELECT separated_text FROM word_matching WHERE text = '{match}';")
+        return self.cur.fetchall()
 
     def select_action_by_match(self, text):
         self.cur.execute(f"SELECT action FROM word_matching WHERE text = '{text}';")
