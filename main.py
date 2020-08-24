@@ -101,7 +101,7 @@ class tradubot():
         for text_to_match_splited in self.get_texts_to_match():
             text_to_match_splited = text_to_match_splited[0]
 
-            text_to_match = ' '.join(text_to_match_splited)
+            text_to_match = ' '.join(map(str, text_to_match_splited))
 
             text_splited = text.split(' ')
             
