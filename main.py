@@ -6,8 +6,6 @@ import psycopg2
 import traceback
 from fuzzywuzzy import fuzz
 
-
-
 class tradubot():
     def __init__(self):
         DATABASE_URL = environ['DATABASE_URL']
@@ -93,19 +91,21 @@ class tradubot():
         # Remove o @
         text = text.replace('@tradubot', '')
 
-
         print(f'Será avaliado o texto "{text}"')
 
         best_score_token = 0
         best_score_partial = 0
         best_match = ''
         find = False
-        for text_to_match in self.get_texts_to_match():
-            text_to_match = text_to_match[0]
+        
+        for text_to_match_splited in self.get_texts_to_match():
+            
+            text_to_match = ' '.join(text_to_match_splited)
 
-            text_splited          = text.split(' ')
+            text_splited = text.split(' ')
+            
             print(text_splited)
-            text_to_match_splited = text_to_match.split(' ')
+
             print(text_to_match_splited)
 
             text_new = text
@@ -123,7 +123,7 @@ class tradubot():
             
             for text_to_match_exactly in self.get_texts_to_match():
 
-                if text_to_match_exactly[0] == text_new:
+                if text_to_match_exactly == text_new:
                     print(f'{text_new} é igual a {text_to_match_exactly[0]}')
 
                     best_match = text_to_match_exactly[0]
@@ -133,11 +133,18 @@ class tradubot():
             if find:
                 break     
                   
-            score_token = fuzz.token_set_ratio(text_new, text_to_match)
+            score_token       = fuzz.token_set_ratio(text_new, text_to_match)
+            inv_score_token   = fuzz.token_set_ratio(text_to_match, text_new)
 
-            score_partial = fuzz.partial_ratio(text_new, text_to_match)
+            score_partial     = fuzz.partial_ratio(text_new, text_to_match)
+            inv_score_partial = fuzz.partial_ratio(text_to_match, text_new)
 
-            print(f'{score_token}Token - {score_partial}Partial- {text_to_match} versus {text_new}')
+            score_ratio       = fuzz.ratio(text_new, text_to_match)
+            inv_score_ratio   = fuzz.ratio(text_to_match, text_new)
+
+            print(f'\n{text_to_match} X {text_new}')
+            print(f'{score_token}Token - {score_partial}Partial - {score_ratio}Ratio')
+            print(f'{inv_score_token}Inv_Token - {inv_score_partial}Inv_Partial - {inv_score_ratio}Inv_Ratio\n\n')
 
             if score_token >= best_score_token and score_partial > best_score_partial or score_token > best_score_token and score_partial >= best_score_partial:
                 best_match         = text_to_match
@@ -207,7 +214,7 @@ class tradubot():
 
         text = text.split()
         print(text)
-        
+
         for num, part in enumerate(separated_text):
             if part == 'BASE_WORD':
                 base_word = text[num]
@@ -255,8 +262,8 @@ class tradubot():
 
     def get_texts_to_match(self):
         # É ordenado do maior para menor pra verificar primeiro as opções mais complexas
-        self.cur.execute("SELECT text FROM word_matching ORDER BY LENGTH(text) DESC;")
-        return self.cur.fetchall()
+        self.cur.execute("SELECT separated_text FROM word_matching ORDER BY LENGTH(separated_text) DESC;")
+        return self.cur.fetchall()[0]
 
     def new_language(self, user_name, language):
         print(f'{user_name} is creating new language: {language.lower()}')
@@ -286,8 +293,7 @@ class tradubot():
 
         return self.cur.fetchall()
 
-    
-        
+
 if __name__ == '__main__':
     bot = tradubot()
     bot.main()
