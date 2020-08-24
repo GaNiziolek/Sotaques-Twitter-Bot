@@ -263,7 +263,7 @@ class tradubot():
     def get_texts_to_match(self):
         # É ordenado do maior para menor pra verificar primeiro as opções mais complexas
         self.cur.execute("SELECT separated_text FROM word_matching ORDER BY LENGTH(separated_text) DESC;")
-        return eval(self.cur.fetchall()[0])
+        return eval(str(self.cur.fetchall()[0]))
 
     def new_language(self, user_name, language):
         print(f'{user_name} is creating new language: {language.lower()}')
