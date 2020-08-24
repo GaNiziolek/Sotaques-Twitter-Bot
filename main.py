@@ -100,7 +100,7 @@ class tradubot():
         
         for text_to_match_splited in self.get_texts_to_match():
             text_to_match_splited = text_to_match_splited[0]
-            
+
             text_to_match = ' '.join(text_to_match_splited)
 
             text_splited = text.split(' ')
@@ -264,7 +264,7 @@ class tradubot():
     def get_texts_to_match(self):
         # É ordenado do maior para menor pra verificar primeiro as opções mais complexas
         self.cur.execute("SELECT separated_text FROM word_matching ORDER BY LENGTH(separated_text) DESC;")
-        return eval(self.cur.fetchall())
+        return self.cur.fetchall()
 
     def new_language(self, user_name, language):
         print(f'{user_name} is creating new language: {language.lower()}')
