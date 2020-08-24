@@ -37,8 +37,8 @@ class tradubot():
         
                 print(f'Answering to {mention.user.name}')
 
-                if not mention.user.following:
-                    mention.user.follow()
+                #if not mention.user.following:
+                #    mention.user.follow()
 
                 action, text, best_match, language = self.analysis(mention)
 
@@ -100,7 +100,7 @@ class tradubot():
         
         for text_to_match_splited in self.get_texts_to_match():
             
-            text_to_match = ' '.join(str(word) for word in text_to_match_splited)
+            text_to_match = ' '.join(text_to_match_splited)
 
             text_splited = text.split(' ')
             
@@ -263,7 +263,7 @@ class tradubot():
     def get_texts_to_match(self):
         # É ordenado do maior para menor pra verificar primeiro as opções mais complexas
         self.cur.execute("SELECT separated_text FROM word_matching ORDER BY LENGTH(separated_text) DESC;")
-        return self.cur.fetchall()[0]
+        return eval(self.cur.fetchall()[0])
 
     def new_language(self, user_name, language):
         print(f'{user_name} is creating new language: {language.lower()}')
